@@ -1,59 +1,75 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
+import SocketContext from "../context/socket-context";
 
-import RoomContext from "../context/room-context";
+import Chat from "./Chat";
 
 const JoinChat = (props) => {
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
+  const [joined, setJoined] = useState(false);
+  const [userDetails, setUserDetails] = useState();
 
-  const roomCtx = useContext(RoomContext);
+  const socket = useContext(SocketContext);
 
-  const { hasJoined } = roomCtx;
+  const joinChat = (username, room) => {
+    socket.emit("join", { username, room });
+  };
+
+  const handleWelcomeUser = useCallback((userDetails) => {
+    setJoined(true);
+    setUserDetails(userDetails);
+  }, []);
+
+  const handleDisconnect = () => {
+    setJoined(false);
+  };
 
   useEffect(() => {
-    if (!hasJoined) return;
+    // joined chat
+    socket.on("welcome", handleWelcomeUser);
+  }, [socket, handleWelcomeUser]);
 
-    console.log(hasJoined);
-    props.onUserJoined(hasJoined);
-  }, [hasJoined, props]);
-
-  const addNameHandler = (e) => {
+  const usernameHandler = (e) => {
     setUsername(e.target.value);
   };
 
-  const addRoomHandler = (e) => {
+  const roomHandler = (e) => {
     setRoom(e.target.value);
   };
 
   const submitFormHandler = (e) => {
     e.preventDefault();
 
-    if (room.trim() !== "" && username.trim() !== "") {
-      // pass the two to RoomProvider
-      roomCtx.joinRoom(username, room);
+    if (username.trim() !== "" && room.trim() !== "") {
+      joinChat(username, room);
       setUsername("");
       setRoom("");
     }
   };
+
   return (
     <>
-      <form onSubmit={submitFormHandler}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={username}
-          onChange={addNameHandler}
-        />
-        <input
-          type="text"
-          name="room"
-          placeholder="Room"
-          value={room}
-          onChange={addRoomHandler}
-        />
-        <button type="submit">Join Room</button>
-      </form>
+      {joined ? (
+        <Chat userDetails={userDetails} onDisconnect={handleDisconnect} />
+      ) : (
+        <form onSubmit={submitFormHandler}>
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            onChange={usernameHandler}
+            value={username}
+          />
+          <input
+            type="text"
+            name="room"
+            placeholder="Room"
+            onChange={roomHandler}
+            value={room}
+          />
+          <button type="submit">Join Room</button>
+        </form>
+      )}
     </>
   );
 };
