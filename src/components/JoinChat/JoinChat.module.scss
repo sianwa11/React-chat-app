@@ -1,0 +1,39 @@
+@import "../../variables.scss";
+
+.form {
+  display: flex;
+  flex-direction: column;
+  height: 80%;
+
+  justify-content: space-around;
+
+  &__input {
+    height: 5rem;
+    border: 1px solid $color-primary-light;
+    background-color: $color-primary-light;
+    border-radius: 4px;
+    padding: 3rem;
+    font-size: 1.6rem;
+  }
+
+  &__submit {
+    padding: 2rem;
+    background-color: $color-primary-light;
+    color: black;
+    text-transform: uppercase;
+    font-size: 1.6rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.1s;
+    box-shadow: $shadow;
+
+    &:hover {
+      transform: scale(1.01);
+    }
+
+    &:active {
+      transform: scale(0.99);
+    }
+  }
+}

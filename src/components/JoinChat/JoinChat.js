@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
-import SocketContext from "../context/socket-context";
+import SocketContext from "../../context/socket-context";
 
-import Chat from "./Chat";
+import styles from "./JoinChat.module.scss";
+import Chat from "../Chat/Chat";
 
 const JoinChat = (props) => {
   const [username, setUsername] = useState("");
@@ -52,8 +53,9 @@ const JoinChat = (props) => {
       {joined ? (
         <Chat userDetails={userDetails} onDisconnect={handleDisconnect} />
       ) : (
-        <form onSubmit={submitFormHandler}>
+        <form className={styles.form} onSubmit={submitFormHandler}>
           <input
+            className={styles.form__input}
             type="text"
             name="username"
             placeholder="Username"
@@ -61,13 +63,16 @@ const JoinChat = (props) => {
             value={username}
           />
           <input
+            className={styles.form__input}
             type="text"
             name="room"
             placeholder="Room"
             onChange={roomHandler}
             value={room}
           />
-          <button type="submit">Join Room</button>
+          <button className={styles.form__submit} type="submit">
+            Join Room
+          </button>
         </form>
       )}
     </>

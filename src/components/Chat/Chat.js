@@ -1,5 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import SocketContext from "../context/socket-context";
+import SocketContext from "../../context/socket-context";
+
+import styles from "./Chat.module.scss";
 
 const Chat = (props) => {
   const [message, setMessage] = useState("");
@@ -50,30 +52,36 @@ const Chat = (props) => {
   };
 
   let render = "";
+  // TODO: continue here
+  let chatClass = ``;
 
   if (texts.length > 0) {
     render = "";
     render = texts.map((el, index) => (
-      <p key={index}>
+      <div key={index}>
         {el.text}:{el.username}
-      </p>
+      </div>
     ));
   }
 
   return (
     <>
-      <div></div>
-      <main>{render}</main>
+      <div className={styles.chartArea}>
+        <main className={styles.main}>{render}</main>
 
-      <form onSubmit={submitFormHandler}>
-        <input
-          placeholder="say something nice"
-          onChange={messageHandler}
-          value={message}
-        />
+        <form className={styles.form} onSubmit={submitFormHandler}>
+          <input
+            className={styles.form__input}
+            placeholder="say something nice"
+            onChange={messageHandler}
+            value={message}
+          />
 
-        <button type="submit">SEND</button>
-      </form>
+          <button className={styles.form__submit} type="submit">
+            SEND
+          </button>
+        </form>
+      </div>
     </>
   );
 };

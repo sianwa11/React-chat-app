@@ -1,14 +1,17 @@
 import "./App.css";
 import React from "react";
-import JoinChat from "./components/JoinChat";
+import JoinChat from "./components/JoinChat/JoinChat";
 
 import SocketProvider from "./context/SocketProvider";
+import Card from "./components/Card/Card";
 
 function App() {
   return (
     <React.Fragment>
       <SocketProvider>
-        <JoinChat />
+        <Card>
+          <JoinChat />
+        </Card>
       </SocketProvider>
     </React.Fragment>
   );

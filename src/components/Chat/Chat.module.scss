@@ -1,0 +1,38 @@
+@import "../../variables.scss";
+
+.chartArea {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: $color-primary-light;
+}
+
+.main {
+  height: 100%;
+  font-size: 1.6rem;
+}
+
+.form {
+  display: flex;
+  justify-content: space-between;
+
+  &__input {
+    flex: 1;
+    height: 5rem;
+    border: 1px solid $color-primary-light;
+    padding: 3rem;
+    font-size: 1.6rem;
+  }
+
+  &__submit {
+    padding: 2rem;
+    background-color: green;
+    color: black;
+    text-transform: uppercase;
+    font-size: 1.6rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.1s;
+    box-shadow: $shadow;
+  }
+}
