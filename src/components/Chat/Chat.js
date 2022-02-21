@@ -1,5 +1,12 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import SocketContext from "../../context/socket-context";
+import { IoSend } from "react-icons/io5";
 
 import styles from "./Chat.module.scss";
 
@@ -7,6 +14,7 @@ const Chat = (props) => {
   const [message, setMessage] = useState("");
   const [texts, setTexts] = useState([]);
   const socket = useContext(SocketContext);
+  const textRef = useRef(null);
 
   const broadCastMessage = useCallback((message) => {
     // shows who joined the chat
@@ -24,6 +32,12 @@ const Chat = (props) => {
   const sendChat = (chatSent) => {
     socket.emit("chat", chatSent);
   };
+
+  const scrollToBottom = () => {
+    textRef.current.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(scrollToBottom, [texts]);
 
   useEffect(() => {
     // display welcome message
@@ -53,13 +67,29 @@ const Chat = (props) => {
 
   let render = "";
   // TODO: continue here
-  let chatClass = ``;
+  let chatClass = `${styles.chat}`;
+  let textClass = `${styles.chat__text}`;
+  let myUserClass = `${styles["my-chat"]}`;
+  let myColor = `${styles["my-chat__color"]}`;
 
   if (texts.length > 0) {
     render = "";
+
     render = texts.map((el, index) => (
-      <div key={index}>
-        {el.text}:{el.username}
+      <div
+        className={`${chatClass} ${
+          el.username === props.userDetails.username ? myUserClass : ""
+        }`}
+        key={index}
+      >
+        <div
+          className={`${textClass}  ${
+            el.username === props.userDetails.username ? myColor : ""
+          }`}
+        >
+          <span className={styles["chat__text--small"]}>{el.username}</span>
+          <p>{el.text}</p>
+        </div>
       </div>
     ));
   }
@@ -67,7 +97,11 @@ const Chat = (props) => {
   return (
     <>
       <div className={styles.chartArea}>
-        <main className={styles.main}>{render}</main>
+        <main className={styles.main}>
+          {render}
+
+          <div ref={textRef}></div>
+        </main>
 
         <form className={styles.form} onSubmit={submitFormHandler}>
           <input
@@ -78,7 +112,7 @@ const Chat = (props) => {
           />
 
           <button className={styles.form__submit} type="submit">
-            SEND
+            <IoSend />
           </button>
         </form>
       </div>
